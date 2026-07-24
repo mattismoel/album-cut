@@ -6,7 +6,7 @@ WORKDIR /app
 FROM base
 
 # Install yt-dlp.
-RUN apk -U add yt-dlp
+RUN apk -U add yt-dlp zip
 
 COPY . .
 
