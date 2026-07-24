@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - 5173:5173
+    restart: on-failure
     develop:
       watch:
         - path: ./app
