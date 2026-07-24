@@ -1,5 +1,5 @@
 import path from "node:path"
-import { createCompoundCommand, execAsync } from "./cmd"
+import { createCompoundCommand, execAsync, quote } from "./cmd"
 
 type Format = "mp3"
 
@@ -18,9 +18,7 @@ export const convertFile = async (filePath: string, format: Format) => {
   const outPath = filePath.replace(ext, FORMAT_TO_EXTENSION[format])
 
   const cmd = createCompoundCommand(
-    "ffmpeg",
-    "-i", filePath,
-    outPath
+    "ffmpeg", "-i", quote(filePath), quote(outPath)
   )
 
   await execAsync(cmd)
