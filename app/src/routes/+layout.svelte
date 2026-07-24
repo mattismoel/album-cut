@@ -2,6 +2,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import './layout.css';
 	import './reset.css';
+	import './components.css';
 
 	let { children } = $props();
 </script>
@@ -11,3 +12,6 @@
 </svelte:head>
 
 {@render children()}
+
+<style>
+</style>

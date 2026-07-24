@@ -1,0 +1,24 @@
+.input {
+  width: 100%;
+  border: 1px solid var(--clr-surface-800);
+  padding: 0.5rem 1rem;
+  background: var(--clr-surface-900);
+  border-radius: var(--radius-lg);
+
+  &[data-align='left'] {
+    text-align: left;
+  }
+
+  &[data-align='center'] {
+    text-align: center;
+  }
+
+  &[data-align='right'] {
+    text-align: right;
+  }
+}
+
+input:focus {
+  border-color: var(--clr-surface-700);
+  outline: none;
+}
