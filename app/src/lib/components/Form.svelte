@@ -2,6 +2,7 @@
 	import type { RemoteForm } from '@sveltejs/kit';
 	import type { HTMLFormAttributes } from 'svelte/elements';
 	import Button from './Button.svelte';
+	import Icon from '@iconify/svelte';
 
 	type Props = HTMLFormAttributes & {
 		title: string;
@@ -38,7 +39,16 @@
 		{@render rest.children?.()}
 	</div>
 
-	<Button variant="primary" shrinkMode="responsive">Submit</Button>
+	<Button disabled={isSubmitting} variant="primary" shrinkMode="responsive">
+		{#if isSubmitting}
+			<div class="spin">
+				<Icon icon="boxicons:loader-lines-alt" />
+			</div>
+			Submitting...
+		{:else}
+			Submit
+		{/if}
+	</Button>
 </form>
 
 <style>

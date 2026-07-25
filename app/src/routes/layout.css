@@ -46,9 +46,21 @@
   color: var(--clr-text-light-muted)
 }
 
+@keyframes spin {
+  from {
+    rotate: 0deg;
+  }
+
+  to {
+    rotate: 360deg;
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+
 body {
   background: var(--clr-background);
-  font-family: var(--font-sans);
 }
 
 .row-2 {
