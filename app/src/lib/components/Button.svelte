@@ -55,6 +55,13 @@
 			&:hover {
 				color: var(--clr-text-dark);
 			}
+
+			&:disabled {
+				--clr-disabled: oklch(from var(--clr-primary) max(l - 0.15, 0) c h);
+
+				background: var(--clr-disabled);
+				border: var(--clr-disabled);
+			}
 		}
 
 		&[data-variant='secondary'] {
