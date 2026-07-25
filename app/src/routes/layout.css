@@ -41,7 +41,9 @@
   --radius-lg: 0.75rem;
 }
 
-* {
+body {
+  background: var(--clr-background);
+  font-family: var(--font-sans);
   font-size: var(--text-normal);
   color: var(--clr-text-light-muted)
 }
@@ -59,8 +61,6 @@
 .spin {
   animation: spin 1s linear infinite;
 
-body {
-  background: var(--clr-background);
 }
 
 .row-2 {
