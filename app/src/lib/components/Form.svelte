@@ -23,6 +23,20 @@
 			if (await form.submit()) {
 				form.element.reset();
 				isSubmitting = false;
+			} else {
+				const firstIssue = form.fields.allIssues()?.at(0);
+
+				if (firstIssue) {
+					const element = form.element.querySelector<
+						HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+					>(`[name='${firstIssue.path}']`);
+
+					if (!element) return;
+
+					element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					element.focus({ preventScroll: true });
+				}
+
 				isSubmitting = false;
 			}
 		} catch (err) {
