@@ -93,12 +93,9 @@
 	@media (min-width: 50rem) {
 		.track {
 			padding: var(--spacing-2) 1rem;
-		}
-	}
-
-	.track {
-		&:focus-within {
-			background: var(--clr-surface-900);
+			&:focus-within {
+				background: var(--clr-surface-900);
+			}
 		}
 	}
 
