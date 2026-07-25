@@ -23,6 +23,7 @@
 			if (await form.submit()) {
 				form.element.reset();
 				isSubmitting = false;
+				isSubmitting = false;
 			}
 		} catch (err) {
 			console.error(err);
