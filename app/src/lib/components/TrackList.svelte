@@ -86,7 +86,7 @@
 
 	@media (max-width: 50rem) {
 		.track {
-			padding: var(--spacing-8) 1rem;
+			padding: var(--spacing-8) var(--spacing-4);
 		}
 	}
 
