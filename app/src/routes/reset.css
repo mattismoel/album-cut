@@ -73,6 +73,10 @@ fieldset {
   border: none;
 }
 
+ul {
+  padding: 0;
+}
+
 /*
   10. Create a root stacking context
 */
