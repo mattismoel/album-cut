@@ -62,7 +62,7 @@
 		{@render rest.children?.()}
 	</div>
 
-	<Button disabled={isSubmitting} variant="primary" shrinkMode="responsive">
+	<Button disabled={isSubmitting} variant="primary">
 		{#if isSubmitting}
 			<div class="spin">
 				<Icon icon="boxicons:loader-lines-alt" />
