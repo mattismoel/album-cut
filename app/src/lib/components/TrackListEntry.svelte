@@ -26,6 +26,11 @@
 		form.fields.tracks[i].artists.set(prevArtists ? [...prevArtists, ''] : ['']);
 	};
 
+	const handleDeleteArtist = (idx: number) => {
+		const prevArtists = form.fields.tracks[i].artists.value();
+		form.fields.tracks[i].artists.set(prevArtists.filter((_, i) => i !== idx));
+	};
+
 	onMount(() => {
 		if (!titleInput) return;
 		titleInput.focus();
@@ -55,22 +60,40 @@
 			</div>
 			<TimestampInput field={form.fields.tracks[i].to} />
 		</div>
-
-		{#each form.fields.tracks[i].artists.value() as artist, j}
-			<FormField issues={form.fields.tracks[i].artists[j].issues()}>
-				<Input {...form.fields.tracks[i].artists[j].as('text')} placeholder="Artist" />
-			</FormField>
-		{/each}
-
-		<Button type="button" onclick={handleAddArtist} shrinkMode="stretch">+ Artist</Button>
-
-		<Button type="button" shrinkMode="stretch" onclick={onDelete}>
-			<Icon icon="boxicons:trash" />
-		</Button>
 	</div>
+
+	<div class="artists stack-2">
+		<ul class="stack-2 artists--list">
+			{#each form.fields.tracks[i].artists.value(), j}
+				<li class="stretch row-2">
+					<FormField class="stretch" issues={form.fields.tracks[i].artists[j].issues()}>
+						<Input {...form.fields.tracks[i].artists[j].as('text')} placeholder="Artist" />
+					</FormField>
+					<Button class="btn-dangerous" type="button" onclick={() => handleDeleteArtist(j)}>
+						<Icon icon="boxicons:trash" />
+					</Button>
+				</li>
+			{/each}
+		</ul>
+
+		<Button type="button" onclick={handleAddArtist}>+ Artist</Button>
+	</div>
+
+	<Button type="button" class="stretch btn-dangerous" onclick={onDelete}>
+		<Icon icon="boxicons:trash" />
+		Delete Track
+	</Button>
 </li>
 
 <style>
+	.artists {
+		margin-bottom: var(--spacing-4);
+
+		.artists--list {
+			list-style-type: none;
+		}
+	}
+
 	.arrow {
 		flex-shrink: 0;
 	}
@@ -79,37 +102,16 @@
 		display: flex;
 		align-items: center;
 		gap: var(--spacing-2);
+		margin-bottom: var(--spacing-4);
 	}
 
-	@media (max-width: 50rem) {
-		.row {
-			display: grid;
-			gap: var(--spacing-2);
-		}
+	.row {
+		display: grid;
+		gap: var(--spacing-2);
 	}
 
-	@media (min-width: 50rem) {
-		.row {
-			display: grid;
-			grid-template-columns: 32px 1fr 1fr 48px;
-			gap: var(--spacing-4);
-			align-items: center;
-		}
-	}
-
-	@media (max-width: 50rem) {
-		.track {
-			padding: var(--spacing-8) var(--spacing-4);
-		}
-	}
-
-	@media (min-width: 50rem) {
-		.track {
-			padding: var(--spacing-2) 1rem;
-			&:focus-within {
-				background: var(--clr-surface-900);
-			}
-		}
+	.track {
+		padding: var(--spacing-8) var(--spacing-4);
 	}
 
 	.track--count {
