@@ -63,14 +63,14 @@
 	};
 
 	let isGeneralFilled = $derived.by(() => {
-		const { title, coverArt, releaseDate, url, albumArtist } = createAlbum.fields;
+		const { title, coverArt, releaseDate, url, albumArtists } = createAlbum.fields;
 
 		return (
 			title.value() !== '' &&
 			coverArt.value() !== undefined &&
 			releaseDate.value() !== undefined &&
 			url.value() !== '' &&
-			albumArtist.value() !== ''
+			albumArtists.value() !== undefined
 		);
 	});
 
