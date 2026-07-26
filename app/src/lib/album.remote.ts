@@ -1,7 +1,7 @@
 import fs from "node:fs/promises"
 import { form } from "$app/server";
 
-import { albumFormSchema, cutTracks } from "./album";
+import { albumFormSchema, cutTracks, formatArtistsNames } from "./album";
 import { createTempDir, saveFile, zipFiles } from "./cmd";
 import { downloadVideo } from "./yt-dlp";
 import { convertFile } from "./ffmpeg";
@@ -21,7 +21,8 @@ export const createAlbum = form(albumFormSchema, async ({ url, tracks, ...album 
     const coverPath = path.join(tmpDir, `cover${coverExt}`)
 
     await saveFile(album.coverArt, coverPath)
-    const fileName = `${album.albumArtist}, ${album.title} (${album.releaseDate})`
+
+    const fileName = `${formatArtistsNames(album.albumArtists)} - ${album.title} (${album.releaseDate})`
 
     const videoOutPath = await downloadVideo(url, tmpDir, fileName, "bestaudio")
     const audioOutPath = await convertFile(videoOutPath, "mp3")

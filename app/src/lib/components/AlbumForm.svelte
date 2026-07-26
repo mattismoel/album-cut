@@ -9,6 +9,7 @@
 	import PillSelector from './PillSelector.svelte';
 	import TrackList from './TrackList.svelte';
 	import AlbumArtSelector from './AlbumArtSelector.svelte';
+	import { onMount } from 'svelte';
 
 	const MAX_GENRE_COUNT = 5;
 
@@ -34,6 +35,12 @@
 		'Funk'
 	].sort();
 
+	onMount(() => {
+		createAlbum.fields.set({
+			albumArtists: ['']
+		});
+	});
+
 	const handleAddTrack = () => {
 		const prevTracks = createAlbum.fields.tracks.value() ?? [];
 
@@ -42,9 +49,30 @@
 		const lastTrack = prevTracks.at(-1);
 
 		const newTime = lastTrack?.to ?? '00:00:00';
+		const artist = createAlbum.fields.albumArtists.value().at(0);
 
-		createAlbum.fields.tracks.set([...prevTracks, { id, from: newTime, to: newTime }]);
+		createAlbum.fields.tracks.set([
+			...prevTracks,
+			{
+				id,
+				from: newTime,
+				to: newTime,
+				artists: artist ? [artist] : ['']
+			}
+		]);
 	};
+
+	let isGeneralFilled = $derived.by(() => {
+		const { title, coverArt, releaseDate, url, albumArtist } = createAlbum.fields;
+
+		return (
+			title.value() !== '' &&
+			coverArt.value() !== undefined &&
+			releaseDate.value() !== undefined &&
+			url.value() !== '' &&
+			albumArtist.value() !== ''
+		);
+	});
 
 	const handleDeleteTrack = (id: string) => {
 		const prevTracks = createAlbum.fields.tracks.value();
@@ -57,6 +85,12 @@
 		if (!genreInput) return;
 
 		genres = [...genres, genreInput.value];
+	};
+
+	const handleAddAlbumArtist = () => {
+		const prevArtists = createAlbum.fields.albumArtists.value() ?? [];
+
+		createAlbum.fields.albumArtists.set([...prevArtists, '']);
 	};
 
 	let genres = $state([...DEFAULT_GENRES]);
@@ -91,13 +125,17 @@
 				<FormField issues={createAlbum.fields.title.issues()}>
 					<Input placeholder="Title" {...createAlbum.fields.title.as('text')} />
 				</FormField>
-				<FormField issues={createAlbum.fields.albumArtist.issues()}>
-					<Input placeholder="Album Artist" {...createAlbum.fields.albumArtist.as('text')} />
-				</FormField>
 				<FormField issues={createAlbum.fields.releaseDate.issues()}>
 					<Input placeholder="Year" {...createAlbum.fields.releaseDate.as('number')} />
 				</FormField>
 			</div>
+
+			{#each createAlbum.fields.albumArtists.value(), i}
+				<FormField issues={createAlbum.fields.albumArtists[i].issues()}>
+					<Input placeholder="Album Artist" {...createAlbum.fields.albumArtists[i].as('text')} />
+				</FormField>
+			{/each}
+			<Button type="button" onclick={handleAddAlbumArtist}>+ Artist</Button>
 		</FormSection>
 
 		<FormSection
@@ -129,7 +167,11 @@
 			title="Tracks"
 			description="Here you add the tracks that the video should be split into."
 		>
-			<TrackList form={createAlbum} onAdd={handleAddTrack} onDelete={handleDeleteTrack} />
+			{#if isGeneralFilled}
+				<TrackList form={createAlbum} onAdd={handleAddTrack} onDelete={handleDeleteTrack} />
+			{:else}
+				<span class="italic">Please fill out the general section before adding tracks.</span>
+			{/if}
 		</FormSection>
 	</section>
 </Form>

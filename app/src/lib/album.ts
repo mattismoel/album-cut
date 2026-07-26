@@ -10,12 +10,16 @@ const trackSchema = z.object({
 
   from: timestampSchema,
   to: timestampSchema,
+
+  artists: z.string().nonempty().array(),
 })
 
 const trackFormSchema = z.object({
   id: z.string().nonempty(),
   title: z.string().nonempty(),
   trackNumber: z.int().positive(),
+
+  artists: z.string().nonempty().array().min(1),
 
   from: timestampSchema,
   to: timestampSchema,
@@ -24,7 +28,7 @@ const trackFormSchema = z.object({
 export const albumFormSchema = z.object({
   url: z.url({ hostname: /^youtu\.be$/ }),
   title: z.string().nonempty(),
-  albumArtist: z.string().nonempty(),
+  albumArtists: z.string().nonempty().array().nonempty(),
   releaseDate: z.int().positive(),
   genres: z.string().array(),
   coverArt: z.file().mime(["image/png", "image/jpeg"]),
@@ -33,10 +37,22 @@ export const albumFormSchema = z.object({
 
 type Metadata = {
   album: string;
-  albumArtist: string;
+  albumArtists: string[];
   releaseDate: number;
   genres: string[];
   coverArt: string,
+}
+
+export const formatArtistsNames = (artists: string[]) => {
+  if (artists.length === 0) throw Error("No artists to format from")
+
+  if (artists.length === 1) return artists[0]
+
+  const lastArtist = artists[artists.length - 1]
+
+  const groupedArtists = artists.slice(0, -1)
+
+  return `${groupedArtists.join(", ")} & ${lastArtist}`
 }
 
 /**
@@ -46,8 +62,17 @@ export const cutTracks = async (filePath: string, tracks: Track[], metadata: Met
   const ext = path.extname(filePath)
   const dir = path.dirname(filePath)
 
+  const createTitle = (track: Track) => {
+    // If there are artists add a featuring section to the filename.
+    if (track.artists && track.artists.length > 1) {
+      return `${track.title} (feat. ${track.artists.slice(1).join(", ")})`
+    }
+
+    return `${track.trackNumber} - ${track.title}`
+  }
+
   const createFileName = (track: Track, ext: string) => {
-    return `${track.trackNumber} - ${track.title}${ext}`
+    return `${track.trackNumber} - ${createTitle(track)}${ext}`
   }
 
   let filePaths: string[] = []
@@ -65,12 +90,12 @@ export const cutTracks = async (filePath: string, tracks: Track[], metadata: Met
       "-c", "copy",
       "-metadata:s:v", `title="Album cover"`,
       "-metadata:s:v", `comment="Cover (front)"`,
-      "-metadata", `title="${t.title}"`,
+      "-metadata", `title="${createTitle(t)}"`,
       "-metadata", `track="${t.trackNumber}"`,
       "-metadata", `album="${metadata.album}"`,
       "-metadata", `genre="${metadata.genres.join(";")}"`,
-      "-metadata", `album_artist="${metadata.albumArtist}"`,
-      "-metadata", `artist="${metadata.albumArtist}"`,
+      "-metadata", `album_artist="${metadata.albumArtists.join("; ")}"`,
+      "-metadata", `artist="${t.artists.join("; ")}"`,
       "-metadata", `date="${metadata.releaseDate}"`,
       quote(filePath)
     ]

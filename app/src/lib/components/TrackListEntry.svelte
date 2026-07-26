@@ -5,6 +5,7 @@
 	import TimestampInput from './TimestampInput.svelte';
 	import type { createAlbum } from '$lib/album.remote';
 	import { onMount } from 'svelte';
+	import FormField from './FormField.svelte';
 
 	type Props = {
 		i: number;
@@ -19,6 +20,11 @@
 	let track = $derived(field.value());
 
 	let titleInput = $state<HTMLInputElement>();
+
+	const handleAddArtist = () => {
+		const prevArtists = form.fields.tracks[i].artists.value();
+		form.fields.tracks[i].artists.set(prevArtists ? [...prevArtists, ''] : ['']);
+	};
 
 	onMount(() => {
 		if (!titleInput) return;
@@ -49,6 +55,14 @@
 			</div>
 			<TimestampInput field={form.fields.tracks[i].to} />
 		</div>
+
+		{#each form.fields.tracks[i].artists.value() as artist, j}
+			<FormField issues={form.fields.tracks[i].artists[j].issues()}>
+				<Input {...form.fields.tracks[i].artists[j].as('text')} placeholder="Artist" />
+			</FormField>
+		{/each}
+
+		<Button type="button" onclick={handleAddArtist} shrinkMode="stretch">+ Artist</Button>
 
 		<Button type="button" shrinkMode="stretch" onclick={onDelete}>
 			<Icon icon="boxicons:trash" />
