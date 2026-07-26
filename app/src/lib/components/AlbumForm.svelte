@@ -8,6 +8,7 @@
 	import Input from './Input.svelte';
 	import PillSelector from './PillSelector.svelte';
 	import TrackList from './TrackList.svelte';
+	import AlbumArtSelector from './AlbumArtSelector.svelte';
 
 	const MAX_GENRE_COUNT = 5;
 
@@ -71,11 +72,14 @@
 >
 	<section class="stack-16">
 		<FormSection title="General" description="Here you input the general album information.">
+			<FormField issues={createAlbum.fields.coverArt.issues()}>
+				<div class="album-art-container center-container">
+					<AlbumArtSelector {...createAlbum.fields.coverArt.as('file')} />
+				</div>
+			</FormField>
+
 			<FormField issues={createAlbum.fields.url.issues()}>
 				<Input placeholder="URL" {...createAlbum.fields.url.as('url')} />
-			</FormField>
-			<FormField issues={createAlbum.fields.coverArt.issues()}>
-				<Input placeholder="Cover Art" {...createAlbum.fields.coverArt.as('file')} />
 			</FormField>
 
 			<div class="row-2">
@@ -89,6 +93,7 @@
 					<Input placeholder="Year" {...createAlbum.fields.releaseDate.as('number')} />
 				</FormField>
 			</div>
+		</FormSection>
 
 		<FormSection
 			title={`Genres (${genreCount} of ${MAX_GENRE_COUNT})`}
@@ -125,6 +130,10 @@
 </Form>
 
 <style>
+	.album-art-container {
+		margin-bottom: var(--spacing-8);
+	}
+
 	.genre-input--container {
 		display: flex;
 		gap: var(--spacing-2);

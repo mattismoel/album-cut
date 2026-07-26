@@ -87,3 +87,9 @@ body {
   width: var(--content-width);
   margin-inline: auto;
 }
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
