@@ -1,7 +1,8 @@
 <script lang="ts">
-	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { Attachment } from 'svelte/attachments';
 	import { onMount } from 'svelte';
+	import type { RemoteFormField } from '@sveltejs/kit';
+	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	type Timestamp = {
 		hours: number;
@@ -9,31 +10,9 @@
 		seconds: number;
 	};
 
-	type Props = Omit<HTMLInputAttributes, 'type'>;
-
-	const padZeroAttachment: Attachment<HTMLInputElement> = (element) => {
-		const events = ['change'];
-
-		const padZero = () => {
-			if (isNaN(element.valueAsNumber)) return;
-
-			const newValue = padNumber(element.valueAsNumber);
-			console.log(newValue);
-			element.value = newValue;
-		};
-
-		// padZero();
-
-		events.forEach((e) => element.addEventListener(e, padZero));
-
-		return () => events.forEach((e) => element.removeEventListener(e, padZero));
+	type Props = HTMLInputAttributes & {
+		field: RemoteFormField<string>;
 	};
-
-	let time = $state<Timestamp>({
-		hours: 0,
-		minutes: 0,
-		seconds: 0
-	});
 
 	const padNumber = (x: number) => {
 		return x.toString().padStart(2, '0');
@@ -42,8 +21,6 @@
 	const formatTimestamp = ({ hours, minutes, seconds }: Timestamp) => {
 		return `${padNumber(hours)}:${padNumber(minutes)}:${padNumber(seconds)}`;
 	};
-
-	let props: Props = $props();
 
 	const parseTimestamp = (ts: string): Timestamp => {
 		const [hours, minutes, seconds] = ts.split(':');
@@ -55,33 +32,60 @@
 		};
 	};
 
-	onMount(() => {
-		if (!props.value) return;
+	let { field }: Props = $props();
 
-		time = parseTimestamp(props.value);
+	let time = $state<Timestamp>({
+		hours: 0,
+		minutes: 0,
+		seconds: 0
+	});
+
+	$effect(() => {
+		const value = field.value();
+		if (!value) return;
+
+		time = parseTimestamp(value);
+	});
+
+	const padZeroAttachment = (
+		type: 'hours' | 'minutes' | 'seconds'
+	): Attachment<HTMLInputElement> => {
+		const events = ['input'];
+
+		return (element) => {
+			element.value = padNumber(time[type]);
+
+			const handleInput = () => {
+				const newValue = Number(element.value);
+				time[type] = newValue;
+				element.value = padNumber(newValue);
+			};
+
+			events.forEach((e) => element.addEventListener(e, handleInput));
+			return () => events.forEach((e) => element.removeEventListener(e, handleInput));
+		};
+	};
+
+	onMount(() => {
+		const value = field.value();
+		if (!value) return;
+
+		time = parseTimestamp(value);
+	});
+
+	$effect(() => {
+		field.set(formatTimestamp(time));
 	});
 </script>
 
-<input {...props} type="hidden" value={formatTimestamp(time)} />
+<input {...field.as('text')} type="hidden" value={formatTimestamp(time)} />
 
 <div class="container">
-	<input
-		type="text"
-		value={padNumber(time.hours)}
-		oninput={(e) => (time.hours = Number(e.currentTarget.value))}
-	/>
+	<input type="text" {@attach padZeroAttachment('hours')} />
 	<span>:</span>
-	<input
-		type="text"
-		value={padNumber(time.minutes)}
-		oninput={(e) => (time.minutes = Number(e.currentTarget.value))}
-	/>
+	<input type="text" {@attach padZeroAttachment('minutes')} />
 	<span>:</span>
-	<input
-		type="text"
-		value={padNumber(time.seconds)}
-		oninput={(e) => (time.seconds = Number(e.currentTarget.value))}
-	/>
+	<input type="text" {@attach padZeroAttachment('seconds')} />
 </div>
 
 <style>

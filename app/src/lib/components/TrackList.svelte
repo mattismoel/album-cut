@@ -1,53 +1,42 @@
 <script lang="ts">
 	import { createAlbum } from '$lib/album.remote';
 	import Button from './Button.svelte';
-	import Input from './Input.svelte';
-	import TimestampInput from './TimestampInput.svelte';
-	import Icon from '@iconify/svelte';
+	import TrackListEntry from './TrackListEntry.svelte';
 
 	type Props = {
 		form: typeof createAlbum;
 		onAdd: () => void;
+		onDelete: (id: string) => void;
 	};
 
-	let { form, onAdd }: Props = $props();
+	let { form, onAdd, onDelete }: Props = $props();
 </script>
 
 <div>
-	<ul>
-		{#each form.fields.tracks.value() as track, i (track?.id)}
-			<li class="track">
-				{#if track?.id}
-					<Input {...createAlbum.fields.tracks[i].id.as('hidden', track.id)} />
-				{/if}
-
-				<Input {...createAlbum.fields.tracks[i].trackNumber.as('hidden', i + 1)} />
-
-				<div class="row">
-					<span class="track--count">#{i + 1}</span>
-
-					<Input placeholder="Title" {...createAlbum.fields.tracks[i].title.as('text')} />
-
-					<div class="timestamps">
-						<TimestampInput {...createAlbum.fields.tracks[i].from.as('time')} />
-						<div class="arrow">
-							<Icon icon="boxicons:arrow-right-stroke" />
-						</div>
-						<TimestampInput {...createAlbum.fields.tracks[i].to.as('time')} />
-					</div>
-
-					<Button shrinkMode="stretch">
-						<Icon icon="boxicons:trash" />
-					</Button>
-				</div>
-			</li>
-		{/each}
-	</ul>
+	{#if form.fields.tracks.value() && form.fields.tracks.value().length > 0}
+		<ul>
+			{#each form.fields.tracks.value() as track, i (track?.id)}
+				<TrackListEntry
+					{i}
+					form={createAlbum}
+					onDelete={() => (track?.id ? onDelete(track.id) : undefined)}
+					field={form.fields.tracks[i]}
+				/>
+			{/each}
+		</ul>
+	{:else}
+		<p class="empty-list-text">No tracks as of yet. Add the first one below...</p>
+	{/if}
 
 	<Button type="button" onclick={onAdd}>+ Add Track</Button>
 </div>
 
 <style>
+	.empty-list-text {
+		font-style: italic;
+		margin-bottom: var(--spacing-8);
+	}
+
 	ul {
 		padding: 0;
 		list-style-type: none;

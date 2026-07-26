@@ -41,13 +41,16 @@
 
 		const lastTrack = prevTracks.at(-1);
 
-		createAlbum.fields.tracks.set([
-			...prevTracks,
-			{
-				id,
-				from: lastTrack ? lastTrack.to : undefined
-			}
-		]);
+		const newTime = lastTrack?.to ?? '00:00:00';
+
+		createAlbum.fields.tracks.set([...prevTracks, { id, from: newTime, to: newTime }]);
+	};
+
+	const handleDeleteTrack = (id: string) => {
+		const prevTracks = createAlbum.fields.tracks.value();
+		if (!prevTracks || prevTracks.length === 0) return;
+
+		createAlbum.fields.tracks.set(prevTracks.filter((t) => t?.id !== id));
 	};
 
 	const handleAddGenre = () => {
@@ -55,7 +58,9 @@
 
 		genres = [...genres, genreInput.value];
 	};
+
 	let genres = $state([...DEFAULT_GENRES]);
+
 	let genreCount = $derived(
 		createAlbum.fields.genres.value() ? createAlbum.fields.genres.value().length : 0
 	);
@@ -124,7 +129,7 @@
 			title="Tracks"
 			description="Here you add the tracks that the video should be split into."
 		>
-			<TrackList form={createAlbum} onAdd={handleAddTrack} />
+			<TrackList form={createAlbum} onAdd={handleAddTrack} onDelete={handleDeleteTrack} />
 		</FormSection>
 	</section>
 </Form>
