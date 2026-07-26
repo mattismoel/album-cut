@@ -47,6 +47,7 @@
 				isSubmitting = false;
 			}
 		} catch (err) {
+			isSubmitting = false;
 			console.error(err);
 		}
 	})}
