@@ -93,3 +93,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.italic {
+  font-style: italic;
+}
