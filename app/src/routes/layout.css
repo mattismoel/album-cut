@@ -94,6 +94,10 @@ body {
   align-items: center;
 }
 
+.stretch {
+  width: 100%;
+}
+
 .italic {
   font-style: italic;
 }
