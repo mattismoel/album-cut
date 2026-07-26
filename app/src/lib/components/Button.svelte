@@ -2,10 +2,8 @@
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 	type Variant = 'primary' | 'secondary';
-	type ShrinkMode = 'fit' | 'stretch' | 'responsive';
 
 	type BaseProps = {
-		shrinkMode?: ShrinkMode;
 		variant?: Variant;
 	};
 
@@ -19,13 +17,12 @@
 
 	type Props = BaseProps & (ButtonAttributes | LinkButtonAttributes);
 
-	let { shrinkMode = 'fit', variant = 'secondary', ...rest }: Props = $props();
+	let { variant = 'secondary', ...rest }: Props = $props();
 </script>
 
 <svelte:element
 	this={rest.href ? 'a' : 'button'}
 	data-variant={variant}
-	data-shrink-mode={shrinkMode}
 	{...rest}
 	class={[
 		'btn',
