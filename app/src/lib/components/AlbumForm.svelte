@@ -1,13 +1,37 @@
 <script lang="ts">
 	import { createAlbum } from '$lib/album.remote';
+	import Icon from '@iconify/svelte';
+	import Button from './Button.svelte';
 	import Form from './Form.svelte';
 	import FormField from './FormField.svelte';
 	import FormSection from './FormSection.svelte';
 	import Input from './Input.svelte';
-	import Select from './Select.svelte';
+	import PillSelector from './PillSelector.svelte';
 	import TrackList from './TrackList.svelte';
 
-	const GENRES = ['Rock', 'Pop', 'R&B', 'Electronic'];
+	const MAX_GENRE_COUNT = 5;
+
+	const DEFAULT_GENRES = [
+		'Rock',
+		'Pop',
+		'R&B',
+		'Hip Hop',
+		'Rap',
+		'Classical',
+		'Electronic',
+		'Punk',
+		'Soul',
+		'Electronica',
+		'Jazz',
+		'Trance',
+		'Electropop',
+		'Synth-Pop',
+		'Indie Rock',
+		'Blues',
+		'Metal',
+		'Fusion',
+		'Funk'
+	].sort();
 
 	const handleAddTrack = () => {
 		const prevTracks = createAlbum.fields.tracks.value() ?? [];
@@ -24,6 +48,18 @@
 			}
 		]);
 	};
+
+	const handleAddGenre = () => {
+		if (!genreInput) return;
+
+		genres = [...genres, genreInput.value];
+	};
+	let genres = $state([...DEFAULT_GENRES]);
+	let genreCount = $derived(
+		createAlbum.fields.genres.value() ? createAlbum.fields.genres.value().length : 0
+	);
+
+	let genreInput = $state<HTMLInputElement>();
 </script>
 
 <Form
@@ -53,12 +89,28 @@
 				</FormField>
 			</div>
 
-			<FormField issues={createAlbum.fields.genre.issues()}>
-				<Select placeholder="Genre" {...createAlbum.fields.genre.as('select')}>
-					{#each GENRES as genre}
-						<option value={genre}>{genre}</option>
-					{/each}
-				</Select>
+		<FormSection
+			title={`Genres (${genreCount} of ${MAX_GENRE_COUNT})`}
+			description="Define the genres associated with this album."
+		>
+			<div class="genre-input--container">
+				<Input placeholder="Genre Name" bind:element={genreInput} />
+				<Button type="button" onclick={handleAddGenre}>
+					<Icon icon="boxicons:plus" style="flex-shrink: 0" />
+					Add
+				</Button>
+			</div>
+
+			<FormField issues={createAlbum.fields.genres.issues()}>
+				<PillSelector
+					{...createAlbum.fields.genres.as('select multiple')}
+					bind:selected={
+						() => createAlbum.fields.genres.value() || [],
+						(newGenres) => createAlbum.fields.genres.set(newGenres)
+					}
+					maxSelect={MAX_GENRE_COUNT}
+					options={genres.map((g) => ({ value: g, name: g }))}
+				/>
 			</FormField>
 		</FormSection>
 
@@ -70,3 +122,10 @@
 		</FormSection>
 	</section>
 </Form>
+
+<style>
+	.genre-input--container {
+		display: flex;
+		gap: var(--spacing-2);
+	}
+</style>

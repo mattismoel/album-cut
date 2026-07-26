@@ -26,7 +26,7 @@ export const albumFormSchema = z.object({
   title: z.string().nonempty(),
   albumArtist: z.string().nonempty(),
   releaseDate: z.int().positive(),
-  genre: z.string().nonempty(),
+  genres: z.string().array(),
   coverArt: z.file().mime(["image/png", "image/jpeg"]),
   tracks: trackFormSchema.array().min(1)
 })
@@ -35,7 +35,7 @@ type Metadata = {
   album: string;
   albumArtist: string;
   releaseDate: number;
-  genre: string;
+  genres: string[];
   coverArt: string,
 }
 
@@ -68,7 +68,7 @@ export const cutTracks = async (filePath: string, tracks: Track[], metadata: Met
       "-metadata", `title="${t.title}"`,
       "-metadata", `track="${t.trackNumber}"`,
       "-metadata", `album="${metadata.album}"`,
-      "-metadata", `genre="${metadata.genre}"`,
+      "-metadata", `genre="${metadata.genres.join(";")}"`,
       "-metadata", `album_artist="${metadata.albumArtist}"`,
       "-metadata", `artist="${metadata.albumArtist}"`,
       "-metadata", `date="${metadata.releaseDate}"`,
