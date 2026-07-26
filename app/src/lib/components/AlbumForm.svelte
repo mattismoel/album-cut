@@ -66,6 +66,7 @@
 	form={createAlbum}
 	title="AlbumCut"
 	description="With this tool you can cut any YouTube video into an album format with the correctly set metadata."
+	submitBtnText={{ normal: 'Cut Album', submitting: 'Cutting Album...' }}
 	enctype="multipart/form-data"
 >
 	<section class="stack-16">

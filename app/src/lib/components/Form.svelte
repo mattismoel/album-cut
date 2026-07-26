@@ -8,9 +8,16 @@
 		title: string;
 		description: string;
 		form: RemoteForm<any, any>;
+		submitBtnText?: { normal: string; submitting: string };
 	};
 
-	let { form, title, description, ...rest }: Props = $props();
+	let {
+		form,
+		title,
+		description,
+		submitBtnText = { normal: 'Submit', submitting: 'Submitting...' },
+		...rest
+	}: Props = $props();
 
 	let isSubmitting = $state(false);
 </script>
@@ -59,9 +66,9 @@
 			<div class="spin">
 				<Icon icon="boxicons:loader-lines-alt" />
 			</div>
-			Submitting...
+			{submitBtnText.submitting}
 		{:else}
-			Submit
+			{submitBtnText.normal}
 		{/if}
 	</Button>
 </form>
