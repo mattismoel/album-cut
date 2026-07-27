@@ -1,0 +1,9 @@
+services:
+  frontend:
+    image: ghcr.io/mattismoel/album-cut/frontend:main
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
