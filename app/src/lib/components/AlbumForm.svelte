@@ -105,12 +105,12 @@
 <Form
 	form={createAlbum}
 	title="AlbumCut"
-	description="With this tool you can cut any YouTube video into an album format with the correctly set metadata."
+	description="Cut any YouTube live concert video into a convenient ZIP-file containing all the tracks in album format, with the correctly set metadata."
 	submitBtnText={{ normal: 'Cut Album', submitting: 'Cutting Album...' }}
 	enctype="multipart/form-data"
 >
 	<section class="stack-16">
-		<FormSection title="General" description="Here you input the general album information.">
+		<FormSection title="General" description="Input all the general album information.">
 			<FormField issues={createAlbum.fields.coverArt.issues()}>
 				<div class="album-art-container center-container">
 					<AlbumArtSelector {...createAlbum.fields.coverArt.as('file')} />
@@ -167,10 +167,7 @@
 			</FormField>
 		</FormSection>
 
-		<FormSection
-			title="Tracks"
-			description="Here you add the tracks that the video should be split into."
-		>
+		<FormSection title="Tracks" description="Add the tracks that the video should be split into.">
 			{#if isGeneralFilled}
 				<TrackList form={createAlbum} onAdd={handleAddTrack} onDelete={handleDeleteTrack} />
 			{:else}
