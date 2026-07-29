@@ -78,6 +78,21 @@ ul {
 }
 
 /*
+Source - https://stackoverflow.com/a/23374725
+Posted by Richard Deeming, modified by community. See post 'Timeline' for change history
+Retrieved 2026-07-29, License - CC BY-SA 4.0
+*/
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/*
   10. Create a root stacking context
 */
 #root,
