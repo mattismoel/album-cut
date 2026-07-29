@@ -16,7 +16,11 @@
 
 <div class="container">
 	<div class="image-container">
-		<img {src} alt="" data-spin={src !== undefined ? 'true' : 'false'} />
+		{#if src}
+			<img {src} alt="" data-spin={src !== undefined ? 'true' : 'false'} />
+		{:else}
+			<div class="placeholder"></div>
+		{/if}
 		<img src={Cover} alt="" class="cover" />
 	</div>
 
@@ -56,6 +60,9 @@
 
 		margin-bottom: var(--spacing-8);
 
+		overflow: hidden;
+		border-radius: 100%;
+
 		&::after {
 			content: '';
 			position: absolute;
@@ -71,25 +78,31 @@
 			width: 2rem;
 			aspect-ratio: 1 / 1;
 		}
+
+		--cover-size: 15rem;
+
+		img {
+			&[data-spin='true'] {
+				animation: record 3s cubic-bezier(0.075, 0.82, 0.165, 1);
+			}
+
+			width: var(--cover-size);
+			aspect-ratio: 1 / 1;
+			border-radius: 100%;
+			border: none;
+			object-fit: cover;
+		}
+
+		.placeholder {
+			height: var(--cover-size);
+			width: var(--cover-size);
+			background: var(--clr-surface-900);
+		}
 	}
 
 	.container {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-
-	img {
-		--cover-size: 15rem;
-
-		&[data-spin='true'] {
-			animation: record 3s cubic-bezier(0.075, 0.82, 0.165, 1);
-		}
-
-		width: var(--cover-size);
-		aspect-ratio: 1 / 1;
-		border-radius: 100%;
-		border: none;
-		object-fit: cover;
 	}
 </style>
