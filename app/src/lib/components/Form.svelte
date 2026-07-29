@@ -9,12 +9,14 @@
 		description: string;
 		form: RemoteForm<any, any>;
 		submitBtnText?: { normal: string; submitting: string };
+		disabled?: boolean;
 	};
 
 	let {
 		form,
 		title,
 		description,
+		disabled,
 		submitBtnText = { normal: 'Submit', submitting: 'Submitting...' },
 		...rest
 	}: Props = $props();
@@ -62,7 +64,7 @@
 		{@render rest.children?.()}
 	</div>
 
-	<Button disabled={isSubmitting} variant="primary">
+	<Button disabled={isSubmitting || disabled} variant="primary">
 		{#if isSubmitting}
 			<div class="spin">
 				<Icon icon="boxicons:loader-lines-alt" />
