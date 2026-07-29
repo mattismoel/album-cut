@@ -122,11 +122,15 @@
 			</FormField>
 
 			<div class="row-2">
-				<FormField issues={createAlbum.fields.title.issues()}>
+				<FormField issues={createAlbum.fields.title.issues()} class="stretch">
 					<Input placeholder="Title" {...createAlbum.fields.title.as('text')} />
 				</FormField>
 				<FormField issues={createAlbum.fields.releaseDate.issues()}>
-					<Input placeholder="Year" {...createAlbum.fields.releaseDate.as('number')} />
+					<Input
+						align="center"
+						placeholder="Release Year"
+						{...createAlbum.fields.releaseDate.as('number')}
+					/>
 				</FormField>
 			</div>
 
