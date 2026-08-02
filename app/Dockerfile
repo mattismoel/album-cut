@@ -18,6 +18,9 @@ COPY --from=builder /app/build build
 COPY --from=builder /app/node_modules node_modules
 COPY --from=builder /app/package.json .
 
+# Install yt-dlp.
+RUN apk -U add yt-dlp zip
+
 ENV NODE_ENV="production"
 
 EXPOSE 3000
