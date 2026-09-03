@@ -13,7 +13,7 @@ import { getBrowserFromRequest } from "./request";
 export const createAlbum = form(albumFormSchema, async ({ url, tracks, ...album }) => {
   const { request } = getRequestEvent()
 
-  const browser = getBrowserFromRequest(request)
+  const browser = "firefox"
   console.log("browser", browser)
 
   const tmpDir = await createTempDir("album-cut")

@@ -13,7 +13,6 @@ export type Format = "bestaudio"
 export const downloadVideo = async (url: string, outDir: string, fileName: string, format: Format, browser: Browser) => {
   let cmd = createCompoundCommand(
     "yt-dlp",
-    "--cookies-from-browser", browser,
     "-f", format,
     "-o", path.join(outDir, quote(`${fileName}.%(ext)s`)),
     "--print", "after_move:filepath",
