@@ -31,7 +31,7 @@ jobs:
           cache: npm
 
       - name: Setup Rust
-        uses: dtlnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Install Linux Dependencies
         run: |
