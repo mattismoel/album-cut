@@ -68,7 +68,7 @@ export const cutTracks = async (filePath: string, tracks: Track[], metadata: Met
       return `${track.title} (feat. ${track.artists.slice(1).join(", ")})`
     }
 
-    return `${track.trackNumber} - ${track.title}`
+    return `${track.title}`
   }
 
   const createFileName = (track: Track, ext: string) => {

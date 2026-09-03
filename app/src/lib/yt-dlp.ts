@@ -1,5 +1,6 @@
 import path from "path"
 import { createCompoundCommand, execAsync, quote } from "./cmd"
+import type { Browser } from "./request"
 
 export type Format = "bestaudio"
 
@@ -9,7 +10,7 @@ export type Format = "bestaudio"
  * @param outDir - The directory to put the downloaded file in.
  * @param format - The format to use.
  */
-export const downloadVideo = async (url: string, outDir: string, fileName: string, format: Format) => {
+export const downloadVideo = async (url: string, outDir: string, fileName: string, format: Format, browser: Browser) => {
   let cmd = createCompoundCommand(
     "yt-dlp",
     "-f", format,
