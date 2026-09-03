@@ -10,6 +10,8 @@
 	import TrackList from './TrackList.svelte';
 	import AlbumArtSelector from './AlbumArtSelector.svelte';
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
+	import { dev } from '$app/env';
 
 	const MAX_GENRE_COUNT = 5;
 
@@ -29,6 +31,7 @@
 		'Electropop',
 		'Synth-Pop',
 		'Indie Rock',
+		'Folk Rock',
 		'Blues',
 		'Metal',
 		'Fusion',
@@ -36,8 +39,45 @@
 	].sort();
 
 	onMount(() => {
+		if (!dev) return;
+
 		createAlbum.fields.set({
-			albumArtists: ['']
+			releaseDate: 2015,
+			url: 'https://youtu.be/EyiiwNHAC8M?si=gBGsWg0GpMNU4GBK',
+			albumArtists: ['Kurt Vile'],
+			genres: ['Indie Rock', 'Folk Rock'],
+			title: 'Live at KEXP',
+			tracks: [
+				{
+					id: crypto.randomUUID(),
+					title: 'Dust Bunnies',
+					from: '00:00:28',
+					to: '00:05:06',
+					artists: ['Kurt Vile']
+				},
+
+				{
+					id: crypto.randomUUID(),
+					title: 'Pretty Pimpin',
+					from: '00:05:47',
+					to: '00:10:33',
+					artists: ['Kurt Vile']
+				},
+				{
+					id: crypto.randomUUID(),
+					title: 'Wheelhouse',
+					from: '00:17:12',
+					to: '00:23:32',
+					artists: ['Kurt Vile']
+				},
+				{
+					id: crypto.randomUUID(),
+					title: 'Goldtone',
+					from: '00:24:53',
+					to: '00:33:45',
+					artists: ['Kurt Vile']
+				}
+			]
 		});
 	});
 
@@ -175,6 +215,7 @@
 			{/if}
 		</FormSection>
 	</section>
+	{JSON.stringify(createAlbum.fields.allIssues())}
 </Form>
 
 <style>
